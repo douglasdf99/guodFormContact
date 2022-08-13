@@ -154,15 +154,24 @@ function sendData() {
         alert.style.display = 'block';
         alert.setAttribute('class', 'success');
         alertMessage.innerHTML = "Mensagem enviado com suceso"
+        
       }).catch(function(err) {
         console.log(err);
         alert.style.display = 'block';
         alert.setAttribute('class', 'danger');
         alertMessage.innerHTML = "Algo deu errado. Tente mais tarde"
       }).finally(()=>{
+        location.hash = "#alert";
+        resetForm();
         document.getElementById("text-enviarSaveLeadsTermos").innerText =
         "Enviar";
       });
   
     }
-  }
+}
+function resetForm() {
+  document.getElementById("name").value = '';
+  document.getElementById("email").value = '';
+  document.getElementById("message").value = '';
+  document.getElementById("phone").value = '';
+}
