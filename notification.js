@@ -127,44 +127,42 @@ function sendData() {
       let email = document.getElementById("email").value;
       let message = document.getElementById("message").value;
       let telefone = inteliput.getNumber();
-      var data = new FormData();
-      data.append("name", nome);
-      data.append("email", email);
-      data.append("body", message);
-      data.append("number", telefone.replace("+", ""));
-      var jwtoken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2FybmFtZSI6IkFkbWluaXN0cmFkb3IiLCJwcm9maWxlIjoiYWRtaW4iLCJpZCI6MSwiaWF0IjoxNjYwNDA5OTQ2LCJleHAiOjE2OTE5NDU5NDZ9.2iYcC4ELb9NC0uootI2O9FLKyjQtmX1Uv37g5gtR7ps'
-      var xhr = new XMLHttpRequest();
-      
-      xhr.open(
-        "POST",
-        "http://localhost:8080/" +
-        "message_notification",
-        true
-        );
-      xhr.setRequestHeader('Authorization', 'Bearer ' + jwtoken);	
-      xhr.setRequestHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-      xhr.setRequestHeader('Access-Control-Allow-Credentials', true);
-      xhr.onload = function () {
-        let alert = document.getElementById("alert");
-        let alertMessage = document.getElementById("alertMessage");
-        
-        // do something to response
-        console.log(this.responseText);
-        try {
-          alert.style.display = 'block';
-          alert.setAttribute('class', 'danger');
-          alertMessage.innerHTML = "Algo deu errado. Tente mais tarde" +this.responseText
-        } catch (e) {
-          alert.style.display = 'block';
-          alert.setAttribute('class', 'success');
-          alertMessage.innerHTML = "Mensagem enviado com suceso"
-        //   window.location.href = this.responseText;
-        } finally{
-          document.getElementById("text-enviarSaveLeadsTermos").innerText =
-          "Enviar";
-        }
+      var data = {
+        name: nome,
+        email,
+        body:message,
+        number: telefone.replace("+", "")
+      }
 
+      var jwtoken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2FybmFtZSI6IkFkbWluaXN0cmFkb3IiLCJwcm9maWxlIjoiYWRtaW4iLCJpZCI6MSwiaWF0IjoxNjYwNDE0NDA2LCJleHAiOjE2OTE5NTA0MDZ9.xmmVATJXlUQVDC92cn7qKFL_QbdO8IRbnEOE7-halIs'
+      var myHeaders = new Headers({
+        'Authorization': 'Bearer ' + jwtoken,
+        "Content-Type": "application/json",
+      });
+
+      var myInit = { 
+        method: 'POST',
+        headers: myHeaders,
+        body: JSON.stringify(data),
+        mode: 'cors',
+        cache: 'default'
       };
-      xhr.send(data);
+      let alert = document.getElementById("alert");
+      let alertMessage = document.getElementById("alertMessage");
+      fetch('https://apiwp.guodti.com/message_notification', myInit)
+      .then(function() {
+        alert.style.display = 'block';
+        alert.setAttribute('class', 'success');
+        alertMessage.innerHTML = "Mensagem enviado com suceso"
+      }).catch(function(err) {
+        console.log(err);
+        alert.style.display = 'block';
+        alert.setAttribute('class', 'danger');
+        alertMessage.innerHTML = "Algo deu errado. Tente mais tarde"
+      }).finally(()=>{
+        document.getElementById("text-enviarSaveLeadsTermos").innerText =
+        "Enviar";
+      });
+  
     }
   }
